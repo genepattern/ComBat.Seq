@@ -13,12 +13,12 @@ parser = OptionParser()
 # Input file
 parser <- add_option(parser, c("--input_GCT"), help="GCT file to load
                      ( containing the raw counts).")
-parser <- add_option(parser, c("--input_CLS"), help="CLS file to load 
+parser <- add_option(parser, c("--input_CLS"), help="CLS file to load
                                (containing the same phenotypes).")
 # ===================================================
 # parameter for save_it
 parser <- add_option(parser, c("--file_name"), type='character',
-                     default='combatseq_normalized', help="Basename of the 
+                     default='combatseq_normalized', help="Basename of the
                      file to be saved.")
 # ====================================================
 
@@ -37,11 +37,11 @@ print('================================================')
 ##########################################################
 
 ## Load the GCT file
-read_gct <- function(input.file){
+read_gct <- function(input_file){
   write("Reading GCT file...", stdout())
   # Read GCT file as a matrix
-  
-  a_df <- read.table(input.file, sep = "\t", skip = 2) # read the gct file as a dataframe
+
+  a_df <- read.table(input_file, sep = "\t", skip = 2) # read the gct file as a dataframe
   my_colnames <- a_df[1,]                              # saving the data in the first row to variable my_colnames
   colnames(a_df) <- my_colnames                        # setting my_colnames to be the column name in the df
   a_df <- a_df[-1,]                                    # dropping the first row now that it's the column names
@@ -52,8 +52,8 @@ read_gct <- function(input.file){
 }
 
 # returns the number of columns given a file
-cols <- function(input.file){
-  a_df <- read.table(input.file, sep = "\t", skip = 2)  # read the gct file as a dataframe
+cols <- function(input_file){
+  a_df <- read.table(input_file, sep = "\t", skip = 2)  # read the gct file as a dataframe
   my_colnames <- a_df[1,]                               # saving the data in the first row to variable my_colnames
   colnames(a_df) <- my_colnames                         # setting my_colnames to be the column name in the df
   a_df <- a_df[-1,]
@@ -61,8 +61,8 @@ cols <- function(input.file){
 }
 
 # returns the number of rows given a file
-rows <- function(input.file){
-  a_df <- read.table(input.file, sep = "\t", skip = 2)  # read the gct file as a dataframe
+rows <- function(input_file){
+  a_df <- read.table(input_file, sep = "\t", skip = 2)  # read the gct file as a dataframe
   my_colnames <- a_df[1,]                               # saving the data in the first row to variable my_colnames
   colnames(a_df) <- my_colnames                         # setting my_colnames to be the column name in the df
   a_df <- a_df[-1,]
@@ -71,8 +71,8 @@ rows <- function(input.file){
 
 
 # need to return the name column bc when turning the gct to df to matrix, from df to matrix, the index column disappears
-return_name <- function(input.file){
-  a_df <- read.table(input.file, sep = "\t", skip = 2)  # read the gct file as a dataframe
+return_name <- function(input_file){
+  a_df <- read.table(input_file, sep = "\t", skip = 2)  # read the gct file as a dataframe
   my_colnames <- a_df[1,]                               # saving the data in the first row to variable my_colnames
   colnames(a_df) <- my_colnames                         # setting my_colnames to be the column name in the df
   a_df <- a_df[-1,]                                     # dropping the first row now that it's the column names
@@ -82,8 +82,8 @@ return_name <- function(input.file){
 
 
 # returns the description column
-return_description <- function(input.file){  
-  a_df <- read.table(input.file, sep = "\t", skip = 2)  # read the gct file as a dataframe
+return_description <- function(input_file){
+  a_df <- read.table(input_file, sep = "\t", skip = 2)  # read the gct file as a dataframe
   my_colnames <- a_df[1,]                               # saving the data in the first row to variable my_colnames
   colnames(a_df) <- my_colnames                         # setting my_colnames to be the column name in the df
   a_df <- a_df[-1,]                                     # dropping the first row now that it's the column names
@@ -92,31 +92,31 @@ return_description <- function(input.file){
 }
 
 # read the cls file and output an array for the batch labels
-read_cls <- function(input.file){
+read_cls <- function(input_file){
   write("Reading CLS file...", stdout())
-  cls_list = scan(file=input.file, what="integer", sep=" ", skip = 2)  # skip first two lines, capture batch numbers as a list
+  cls_list = scan(file=input_file, sep=" ", skip = 2)  # skip first two lines, capture batch numbers as a list
   cls_vector = array(as.numeric(unlist(cls_list)))                     # turn list into a vector (1-D array)
   return(cls_vector)
 }
 
 
 # save the Combat-seq adjusted data as a GCT file
-save_data <- function(fileName, batch_corrected_matrix, input.file){
-  
+save_data <- function(fileName, batch_corrected_matrix, input_file){
+
   a_df <- as.data.frame(batch_corrected_matrix)
-  a_df$Description <- return_description(input.file)                              # insert description column
-  a_df$Name <- return_name(input.file)                                            # insert name column
-  a_df <- a_df[c(cols(input.file)+2, cols(input.file)+1, 1:cols(input.file))]     # move name and description column to the front
+  a_df$Description <- return_description(input_file)                              # insert description column
+  a_df$Name <- return_name(input_file)                                            # insert name column
+  a_df <- a_df[c(cols(input_file)+2, cols(input_file)+1, 1:cols(input_file))]     # move name and description column to the front
   col_names <- names(a_df)
   a_df <- rbind(col_names, a_df)                                                  # add the columns names as the first row in df
   colnames(a_df) <- NULL
-  
-  f <- file(fileName) 
-  first_second = paste("#1.2", paste(as.character(rows(input.file)), as.character(cols(input.file)), sep="\t"), sep="\n")
-  write(first_second, file=fileName) 
-  
+
+  f <- file(fileName)
+  first_second = paste("#1.2", paste(as.character(rows(input_file)), as.character(cols(input_file)), sep="\t"), sep="\n")
+  write(first_second, file=fileName)
+
   write.table(a_df, quote=FALSE, row.names = FALSE, file=fileName, sep="\t", append=TRUE) # write data from a_df to the file
-  close(f) 
+  close(f)
 }
 
 ############################################################
@@ -124,7 +124,13 @@ save_data <- function(fileName, batch_corrected_matrix, input.file){
 ############################################################
 
 # Load libraries
-library(sva)
+source('src/ComBat_seq.R')
+print("ComBat Seq has been loaded")
+
+library("BiocManager")
+BiocManager::install("edgeR")
+library("edgeR")
+
 
 # Add at each step a display size figure for the Seurat Object
 print("**************************************************")
@@ -149,4 +155,4 @@ print("**************************************************")
 print("****************    SAVE GCT      ****************")
 print("**************************************************")
 
-save_data(paste(args$file_name, '.gct', sep=''), batch_corrected_matrix=adjusted, input.file = input_GCT)
+save_data(paste(args$file_name, '.gct', sep=''), batch_corrected_matrix=adjusted, input_file = input_GCT)
