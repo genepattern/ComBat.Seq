@@ -8,18 +8,14 @@ WORKDIR /opt/genepatt
 RUN mkdir src
 RUN mkdir testdata
 
-
-## Copying source code
-COPY src/* /opt/genepatt/src/
-
-
-
 ## install packages
-
-
-## optional packages
-RUN R -e "install.packages('optparse', repos='http://cran.us.r-project.org')"
-
+RUN Rscript -e "install.packages('optparse', repos='http://cran.us.r-project.org')"
+RUN Rscript -e "install.packages('BiocManager')"
+RUN Rscript -e "library('BiocManager')"
+RUN Rscript -e "BiocManager::install(c('edgeR', 'sva'))"
 
 ## copying data
 COPY data/* /opt/genepatt/testdata/
+
+## Copying source code
+COPY src/* /opt/genepatt/src/

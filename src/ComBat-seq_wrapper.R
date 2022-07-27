@@ -48,8 +48,10 @@ read_gct <- function(input_file){
   a_df <- subset(a_df, select=-c(Description))         # Dropping the "Description" column
   a_df <- subset(a_df, select=-c(Name))                # Dropping the "Name" column
   a_df <- sapply(a_df,as.numeric)                      # turn the dataframe into a matrix
-  return(a_df)
+  names(a_df) <- NULL
+  return(as.matrix(a_df))
 }
+
 
 # returns the number of columns given a file
 cols <- function(input_file){
@@ -123,13 +125,14 @@ save_data <- function(fileName, batch_corrected_matrix, input_file){
 # Begin Running the functions
 ############################################################
 
-# Load libraries
-source('src/ComBat_seq.R')
+## Loading Libraries
+library("BiocManager")
+library("edgeR")
+source('/opt/genepatt/src/ComBat_seq.R')
+source('/opt/genepatt/src/helper_seq.R')
 print("ComBat Seq has been loaded")
 
-library("BiocManager")
-BiocManager::install("edgeR")
-library("edgeR")
+
 
 
 # Add at each step a display size figure for the Seurat Object
@@ -154,5 +157,6 @@ print('... done')
 print("**************************************************")
 print("****************    SAVE GCT      ****************")
 print("**************************************************")
+print(adjusted)
 
-save_data(paste(args$file_name, '.gct', sep=''), batch_corrected_matrix=adjusted, input_file = input_GCT)
+save_data(paste(args$file_name, '.gct', sep=''), batch_corrected_matrix=adjusted, input_file = args$input_GCT)
