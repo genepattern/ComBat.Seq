@@ -1,7 +1,7 @@
 ########################################################
 # Parse Parameters
 ########################################################
-print('=========================================')
+print('================================================')
 print("Loading library: optparse")
 library("optparse")
 
@@ -11,10 +11,12 @@ parser = OptionParser()
 # parameter types: 'character', 'integer', 'logical', 'double', or 'complex'
 # =================================================
 # Input file
-parser <- add_option(parser, c("--input_GCT"), help="GCT file to load
-                     ( containing the raw counts).")
-parser <- add_option(parser, c("--input_CLS"), help="CLS file to load
-                               (containing the same phenotypes).")
+parser <- add_option(parser, c("--input_matrix"), help="GCT file to load
+                     ( containing the raw counts).", default = "NO_FILE")
+parser <- add_option(parser, c("--input_class"), help="CLS file to load
+                               (containing the same phenotypes).", default = "NO_FILE")
+# ===================================================
+
 # ===================================================
 # parameter for save_it
 parser <- add_option(parser, c("--file_name"), type='character',
@@ -23,11 +25,20 @@ parser <- add_option(parser, c("--file_name"), type='character',
 # ====================================================
 
 
+
 print('================================================')
 args <- parse_args(parser)
 print('Parameters used:')
 print(args)
 print('================================================')
+
+USE_GCT <<- FALSE
+## Checking if the user uploaded a GCT file or Not
+if (grepl(".gct", args$input_matrix, fixed = TRUE)){
+  USE_GCT <<- TRUE
+}
+
+print(paste("GCT FILE IS PROVIDED?", USE_GCT))
 
 # Setting up the PDF file for the plots
 # pdf(file=paste(args$file_name, '.pdf', sep=''))
@@ -121,6 +132,28 @@ save_data <- function(fileName, batch_corrected_matrix, input_file){
   close(f)
 }
 
+# Run the wrapper
+run_combat_seq <- function(args){
+  ### Run ComBat_Seq based on what the user inputted.
+  if (USE_GCT){
+    raw_data_matrix <- read_gct(args$input_matrix)
+    phenotype_vector <- read_cls(args$input_class)
+    adjusted <- as.data.frame(ComBat_seq(raw_data_matrix, batch=phenotype_vector))
+    print('... done')
+    print(adjusted)
+    save_data(paste(args$file_name, '.gct', sep=''), batch_corrected_matrix=adjusted, input_file = args$input_matrix)
+  }else{
+    raw_data_matrix <- as.matrix(sapply(read.table(args$input_matrix),as.numeric))
+    phenotype_vector <- array(as.numeric(unlist(scan(file=args$input_class))))
+    adjusted <- as.data.frame(ComBat_seq(raw_data_matrix, batch=phenotype_vector))
+    print('... done')
+    print(adjusted)
+    write.table(adjusted, file = paste(args$file_name, "_adjusted.csv", sep=","))
+  }
+
+
+}
+
 ############################################################
 # Begin Running the functions
 ############################################################
@@ -128,9 +161,11 @@ save_data <- function(fileName, batch_corrected_matrix, input_file){
 ## Loading Libraries
 library("BiocManager")
 library("edgeR")
+
 source('/opt/genepatt/src/ComBat_seq.R')
 source('/opt/genepatt/src/helper_seq.R')
 print("ComBat Seq has been loaded")
+
 
 
 
@@ -140,8 +175,8 @@ print("**************************************************")
 print("************LOAD GCT and CLS**********************")
 print("**************************************************")
 
-raw_data_matrix <- read_gct(args$input_GCT)
-phenotype_vector <- read_cls(args$input_CLS)
+run_combat_seq(args)
+
 
 print("**************************************************")
 print("***********    Running CombatSeq      ************")
@@ -151,12 +186,8 @@ print("**************************************************")
 # CALL COMBAT SEQ ON raw_data_matrix and phenotype_vector
 # adjusted <- as.data.frame(ComBat_seq(count_matrix, batch=batch, group=NULL))
 
-adjusted <- as.data.frame(ComBat_seq(raw_data_matrix, batch=phenotype_vector))
-print('... done')
+
 
 print("**************************************************")
 print("****************    SAVE GCT      ****************")
 print("**************************************************")
-print(adjusted)
-
-save_data(paste(args$file_name, '.gct', sep=''), batch_corrected_matrix=adjusted, input_file = args$input_GCT)
