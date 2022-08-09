@@ -1,0 +1,19 @@
+
+name: ComBat_seq_basic_diff_test_1
+# description: created from job 88951
+# ET(ms): 119000# from server:  https://beta.genepattern.org/gp/
+module: ComBat_seq
+# lsid: urn:lsid:8080.gpserver.ip-172-31-26-71.ip-172-31-26-71.ec2.internal:genepatternmodules:629:12
+params:
+    "GCT": "inputs/BRCA_large_20783x40.gct"
+    "CLS": "inputs/BRCA_large_20783x40.cls"
+    "raw_matrix": ""
+    "class_vec": ""
+    "out_prefix": "out"
+
+assertions:
+    jobStatus: success
+    files:
+        out.gct: !!null
+        stderr.txt: !!null
+        stdout.txt: !!null
