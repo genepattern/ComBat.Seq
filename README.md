@@ -3,8 +3,8 @@
 ### Overview
 ComBat-Seq is a batch effect adjustment tool for bulk RNA-seq count data. Improved model based on ComBat. Takes two different sets of data: 
   1. Combination of GCT + CLS file
-   <br> or
-  2. Combination of two .csv files, a raw count matrix and labels for samples.
+<br> <br> or <br> <br>
+  3. Combination of two .csv files, a raw count matrix and labels for samples.
 
 ### Documentation
   - ComBat-Seq author: Yuqing Zhang. Original GitHub Repo: https://github.com/zhangyuqing/ComBat-seq
