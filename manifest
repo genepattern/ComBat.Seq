@@ -1,9 +1,9 @@
-#ComBat_seq
+#ComBat-Seq
 #Wed Aug 10 20:26:52 UTC 2022
 JVMLevel=
 LSID=urn\:lsid\:genepattern.org\:module.analysis\:00430\:1
 author=Edwin Huang;Mesirov Lab
-commandLine=Rscript /opt/genepatt/src/ComBat-seq_wrapper.R --input_matrix <GCT> <raw_matrix> --input_class <CLS> <class_vec> --file_name <out_prefix>  
+commandLine=Rscript /opt/genepatt/src/ComBat-seq_wrapper.R --input_matrix <GCT> <raw_matrix> --input_class <CLS> <class_vec> --file_name <out_prefix>
 cpuType=any
 description=ComBat_Seq module. A Batch effect adjustment tool for bulk RNA-seq count data. Improvement upon ComBat,  and uses a negative binomial regression to model batch effects. ComBat-seq takes untransformed, raw count matrix as input. Provides adjusted data which preserves the integer nature of counts, so that the adjusted data are compatible with the assumptions of state-of-the-art differential expression software (e.g. edgeR, DESeq2, which request untransformed count data)
 documentationUrl=https\://github.com/genepattern/ComBat-Seq
@@ -13,7 +13,7 @@ job.docker.image=genepattern/combat_seq\:v1
 job.memory=2
 job.walltime=00\:30\:00
 language=any
-name=ComBat_seq
+name=ComBat-Seq
 os=any
 p1_MODE=IN
 p1_TYPE=FILE
@@ -44,7 +44,7 @@ p2_value=
 p3_MODE=IN
 p3_TYPE=FILE
 p3_default_value=
-p3_description=Raw Count Matrix. Columns are samples, rows are genes, and values are counts. Takes a .csv file. 
+p3_description=Raw Count Matrix. Columns are samples, rows are genes, and values are counts. Takes a .csv file.
 p3_fileFormat=.csv
 p3_flag=
 p3_name=raw_matrix
@@ -57,7 +57,7 @@ p3_value=
 p4_MODE=IN
 p4_TYPE=FILE
 p4_default_value=
-p4_description=A (1 x n) vector providing labels to each sample. n \= number of samples, each value is a label for the sample. 
+p4_description=A (1 x n) vector providing labels to each sample. n \= number of samples, each value is a label for the sample.
 p4_fileFormat=.csv
 p4_flag=
 p4_name=class_vec
@@ -86,4 +86,4 @@ src.repo=https\://github.com/genepattern/ComBat-Seq
 taskDoc=
 taskType=
 userid=edwin5588
-version=Finished module interface, testing 
+version=Finished module interface, testing
