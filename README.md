@@ -3,9 +3,10 @@
 ### Overview
 ComBat-Seq is a batch effect adjustment tool for bulk RNA-seq count data. Improved model based on ComBat. There are two different ways to run ComBat-Seq: 
   1. Combination of GCT + CLS file <br> 
-    (Guide to GCT and CLS formats here: https://www.genepattern.org/file-formats-guide#_Creating_Input_Files_GCT)
+    (Guide to GCT and CLS formats here:<br> https://www.genepattern.org/file-formats-guide#_Creating_Input_Files_GCT) <br> 
+     Example dataset here:https://github.com/genepattern/ComBat-Seq/tree/develop/data/test_data_set_1
 <br> <br> or <br> <br>
-  2. A raw count matrix and labels for samples in .TSV (tab-separated values) format.
+  2. A raw count matrix and labels for samples in .TSV (tab-separated values) format. <br> Example dataset here: https://github.com/genepattern/ComBat-Seq/tree/develop/data/test_data_set_2
   
 
 ### Documentation
