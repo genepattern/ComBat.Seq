@@ -1,4 +1,4 @@
-#ComBat-seq
+#ComBat_Seq
 #Mon Nov 07 15:47:15 UTC 2022
 JVMLevel=
 LSID=urn\:lsid\:genepattern.org\:module.analysis\:00430\:1
@@ -13,7 +13,7 @@ job.docker.image=genepattern/combat_seq\:v1
 job.memory=2
 job.walltime=00\:30\:00
 language=any
-name=ComBat-Seq
+name=ComBat_Seq
 os=any
 p1_MODE=IN
 p1_TYPE=FILE
@@ -82,7 +82,7 @@ p5_type=java.lang.String
 p5_value=
 privacy=public
 quality=preproduction
-src.repo=https\://github.com/genepattern/ComBat-Seq
+src.repo=https\://github.com/genepattern/ComBat_Seq
 taskDoc=
 taskType=
 userid=edwin5588
