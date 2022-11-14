@@ -21,3 +21,11 @@ Yuqing Zhang, Giovanni Parmigiani, W Evan Johnson, ComBat-seq: batch effect adju
 
 ### Contact
   - Edwin Huang: edh021@cloud.ucsd.edu
+
+
+
+| Samples      | Sample 1 Name | Sample 2 Name | Sample 3 Name | Sample 4 Name | Sample 5 Name | ... |
+| ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- |
+| Batch      | 1       | 1       | 2       | 2      | 2     |  ... |
+| Group   | Group1 info        | Group1 info        | Group1 info        | Group1 info        | Group1 info        |  ... |
+| ... | ... | ... | ... | ... | ... | ... |
