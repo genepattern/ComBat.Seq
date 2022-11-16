@@ -4,23 +4,34 @@
 ComBat-Seq is a batch effect adjustment tool for bulk RNA-seq count data. Improved model based on ComBat. <br>
 #### Parameters
 To run ComBat Seq, these inputs are used: 
-  1. input matrix (required)
+  1. **input matrix (required)**
       - The input matrix is a counts matrix with dimensions gene x sample. The input counts matrix. Can be a .GCT or a .tsv (tab separated value) file. Rows should be genes, column should be samples, and the value are counts. File format documentation for GCT files: https://www.genepattern.org/file-formats-guide Some sample inputs can be found here: https://github.com/genepattern/ComBat_Seq/tree/develop/data
-  2. batch information (required)
+      - The input matrix should have corresponding sample names for the first row, and corresponding genes for the first column. <br> 
+
+##### Example input matrix:
+| Name      | Sample 1 Name | Sample 2 Name | Sample 3 Name | Sample 4 Name | Sample 5 Name | ... | Sample m Name |
+| ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- |  ----------- | 
+| Gene 1 Name     | 30       | 49       | 554       | 394      | 345     |  ... | 33|
+| Gene 2 Name  | 839        | 485        | 123        | 223        | 339        |  ... | 234 |
+| ... | ... | ... | ... | ... | ... | ... | ... |
+| Gene n Name | 423 | 442 | 123 | 553 | 754 | ... | 22|
+
+  2. **batch information (required)**
       - Batch information contain information on batches. It is a table that looks like the following:
       - The file can be a .CLS file contaning only batch information, or a .tsv (tab separated file) containing batch, group, and any other additional information as long as it follows the format below. <br>
 
-| Samples      | Sample 1 Name | Sample 2 Name | Sample 3 Name | Sample 4 Name | Sample 5 Name | ... |
-| ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- |
-| Batch      | 1       | 1       | 2       | 2      | 2     |  ... |
-| Group   | Group1 info        | Group1 info        | Group1 info        | Group1 info        | Group1 info        |  ... |
-| ... | ... | ... | ... | ... | ... | ... |
+##### Example batch information file
+| Samples      | Sample 1 Name | Sample 2 Name | Sample 3 Name | Sample 4 Name | Sample 5 Name | ... | Sample m Name
+| ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- |
+| Batch      | 1       | 1       | 2       | 2      | 2     |  ... | 4 |
+| Group   | Group 1 info        | Group 1 info        | Group 1 info        | Group 1 info        | Group 1 info        |  ... | Group 3 info |
+| ... | ... | ... | ... | ... | ... | ... | ... | 
 <br>
 <br> 
       
   3. covariates (optional)
       - Row names for covariates to use for this run of ComBat Seq. 
-  4. output prefix (required)
+  4. **output prefix (required)**
       - Prefix for output filenames. 
 #### Advanced Parameters
   5. Shrink
