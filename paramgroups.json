@@ -1,33 +1,24 @@
 [
     {
-        "name": "Start with GCT or Raw Count Matrix",
-        "description": "Two starting options",
-        "hidden": false
-    },
-    {
-        "name": "Start with GCT or Raw Count Matrix/OPTION 1: GCT & CLS",
-        "description": "Using a .GCT + .CLS file.",
-        "hidden": true,
-        "parameters": [
-            "GCT",
-            "CLS"
-        ]
-    },
-    {
-        "name": "Start with GCT or Raw Count Matrix/OPTION 2: Raw Matrix Count & Class Vector",
-        "description": "Starting with a Raw Matrix Count + Class Vector.",
-        "hidden": true,
-        "parameters": [
-            "raw_matrix",
-            "class_vec"
-        ]
-    },
-    {
-        "name": "Output name",
-        "description": "Group two description.",
+        "name": "Inputs",
+        "description": "Input files for ComBat Seq",
         "hidden": false,
         "parameters": [
-            "out_prefix"
+            "input.matrix",
+            "batch.information",
+            "covariates",
+            "output.prefix"
+        ]
+    },
+    {
+        "name": "Advanced Parameters",
+        "description": "Advanced Parameters for ComBat Seq",
+        "hidden": true,
+        "parameters": [
+            "shrink",
+            "shrink_disp",
+            "gene.subset.n",
+            "covariance.matrix"
         ]
     }
 ]

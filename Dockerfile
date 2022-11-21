@@ -8,10 +8,6 @@ WORKDIR /opt/genepatt
 RUN mkdir src
 RUN mkdir testdata
 
-## make directory for packages, and copy them in
-RUN mkdir pkgs
-COPY packages/* pkgs/
-
 
 
 ## install packages
@@ -21,6 +17,10 @@ RUN Rscript -e "library('BiocManager')"
 ### edgeR version: 3.38.4
 RUN Rscript -e "BiocManager::install('edgeR')"
 
+
+## install python
+RUN apt update
+RUN apt install python3
 
 ## copying data
 COPY data/* /opt/genepatt/testdata/
