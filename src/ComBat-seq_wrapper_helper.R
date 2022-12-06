@@ -16,13 +16,35 @@ read_gct <- function(input_file){
 
 
   names(a_df) <- NULL
-  returnlist <- list("data" = as.matrix(a_df), "genes" = genes,
-          "samples" = my_colnames[3:length(my_colnames)], "descriptions" = descriptions)
+  returnlist <- list(
+          "data" = as.matrix(a_df), 
+          "genes" = genes,
+          "samples" = my_colnames[3:length(my_colnames)], 
+          "descriptions" = descriptions,
+          "raw_counts" = FALSE)
   return(returnlist)
 }
 
+covariates_computation <- function(covariates, row_names){
+  #' This function constructs a column of covariates
+  
+  covar = c()
+  if(is.null(row_names)){
+    return(NULL)
+  }else{
+    for(i in 1:length(row_names)){
+      if (row_names[i] %in% covariates) {
+        covar = append(covar, 1)
+      }else {
+        covar = append(covar, 0)
+      }
+    }
+  }
+}
+
 read_delimited_file <- function(input_file){
-  #' This function takes in the input file path and returns a matrix of the count values
+  #' This function takes in the input file path and returns 
+  #' a matrix of the count values
   #' input_file --> filepath to the input counts matrix
 
   write("Reading Tab Delimited file ... ", stdout())
@@ -35,14 +57,16 @@ read_delimited_file <- function(input_file){
     num_cols <- ncol(df)
     df <- sapply(df, as.numeric)
 
+
     returnlist <- list("data" = as.matrix(df),
         "num_rows" = num_rows,
         "num_cols" = num_cols,
-        "sample_names"=NULL,
-        "gene_names"=NULL,
-        "raw_counts"= TRUE)
+        "samples" = rep(paste("sample ", 1:num_cols, sep = "")),
+        "genes" = rep({paste("gene ", 1:num_rows, sep = "")}),
+        "raw_counts" = TRUE,
+        "descriptions" = rep("Not Provided", num_rows))
     return(returnlist)
-  }else{
+  }else {
     # Reading the tab delimited file as a matrix
     # if reading in delimited file with samples and gene names
     num_rows <- nrow(df)
@@ -57,9 +81,11 @@ read_delimited_file <- function(input_file){
     returnlist <- list("data" = as.matrix(df),
         "num_rows" = num_rows,
         "num_cols" = num_cols,
-        "sample_names" = samples,
-        "gene_names" = genes,
-        "raw_counts"= FALSE)
+        "samples" = samples,
+        "genes" = genes,
+        "raw_counts"= FALSE,
+        "descriptions"=rep("Not Provided", nrow(df))
+    )
     return(returnlist)
   }
 
@@ -174,7 +200,7 @@ print_dimensions <- function(arr, arr_name){
 
 # save the Combat-seq adjusted data as a GCT file
 save_data <- function(fileName, batch_corrected_matrix,
-    samples = NULL, genes = NULL, descriptions = NULL, use_gct){
+    samples = NULL, genes = NULL, descriptions = NULL, use_gct, raw_counts){
 
   ## First, print dimensions to make sure everything lines up
   print_dimensions(batch_corrected_matrix, "corrected matrix")
@@ -183,22 +209,22 @@ save_data <- function(fileName, batch_corrected_matrix,
   print_dimensions(descriptions, "descriptions vector")
 
 
-  if (use_gct && !is.null(samples) && !is.null(genes)){
+  if (use_gct){
     ## append columns, genes, descriptions to build GCT file
 
     colnames(batch_corrected_matrix) <- samples
-    batch_corrected_matrix$Description <- descriptions
-    batch_corrected_matrix$Name <- genes
 
 
     f <- file(fileName)
     ## create first two rows for GCT file
     row1 = paste("#1.2", paste(as.character(nrow(batch_corrected_matrix)), as.character(ncol(batch_corrected_matrix)), sep="\t"), sep="\n")
     write(row1, file=fileName)
+    batch_corrected_matrix$Description <- descriptions
+    batch_corrected_matrix$Name <- genes
     write.table(batch_corrected_matrix, quote=FALSE, row.names = FALSE, file=fileName, sep="\t", append=TRUE) # write data from a_df to the file
     close(f)
   }else if (!use_gct){
-    if (!is.null(samples) && !is.null(genes)){
+    if (!raw_counts){
       colnames(batch_corrected_matrix) = samples
       rownames(batch_corrected_matrix) = genes
       write.table(batch_corrected_matrix, file = fileName, sep = '\t')

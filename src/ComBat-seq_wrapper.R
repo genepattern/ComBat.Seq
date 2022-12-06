@@ -35,6 +35,9 @@ parser <- add_option(parser, "--raw_counts", help = "If only using raw count mat
 parser <- add_option(parser, c("--file_name"), type='character',
                      default='combatseq_normalized', help="Basename of the
                      file to be saved.")
+
+parser <- add_option(parser, c("--output_type"), type = 'character',
+                    default = 'gct', help = "Return filetype")
 # ====================================================
 
 
@@ -79,11 +82,18 @@ if (args$covariates != "None"){
   COV_MOD <<- args$covariates
 }
 
+COV_MAT <<- NULL
+if (args$cov_mat != "NO_FILE"){
+  COV_MAT <<- args$cov_mat
+  
+}
+
 FULL_MOD <<- FALSE
 if (args$covariates != "None"){
   FULL_MOD <<- TRUE
 }
 
+OUTPUT_TYPE <<- args$output_type
 
 
 print(paste("GCT FILE IS PROVIDED? ", USE_GCT))
@@ -102,33 +112,86 @@ print(paste("GCT FILE IS PROVIDED? ", USE_CLS))
 run_combat_seq <- function(args){
   ### Run ComBat_Seq based on what the user inputted.
 
+  
+
 
   if (USE_GCT){
+
+    print('Running Combat Seq from GCT input')
     data <- read_gct(args$input_matrix)
     batch_info <- read_multiline_batch_info_file(data$data, args$input_class, USE_CLS)
 
+    if (!is.null(COV_MOD)){
+    covariates = unlist(strsplit(COV_MOD, ","))
+    covariates_col = covariates_computation
+      if (!is.null(COV_MAT)){
+        COV_MAT <- cbind(batch_info$batches, covarites_col)
+        group=batch_info$groups = NULL
+
+      }
+    }
+
     adjusted <- as.data.frame(ComBat_seq(data$data,
       batch=batch_info$batches, group=batch_info$groups, shrink = SHRINK,
-      shrink.disp = SHRINK_DISP, gene.subset.n = GENE_N, covar_mod = COV_MOD,
+      shrink.disp = SHRINK_DISP, gene.subset.n = GENE_N, covar_mod = COV_MAT,
       full_mod = FULL_MOD))
 
-    print('... done')
-    save_data(paste(args$file_name, '.gct', sep=''), batch_corrected_matrix=adjusted,
-        samples = data$samples, genes = data$genes, descriptions= data$descriptions, use_gct = USE_GCT)
+
   }else{
+    print('Running Combat Seq from TSV input')
     data <- read_delimited_file(args$input_matrix)
     batch_info <- read_multiline_batch_info_file(data$data, args$input_class, USE_CLS)
 
+    if (!is.null(COV_MOD)){
+    covariates = unlist(strsplit(COV_MOD, ","))
+    covariates_col = covariates_computation
+      if (!is.null(COV_MAT)){
+        COV_MAT <- cbind(batch_info$batches, covarites_col)
+        group=batch_info$groups = NULL
+
+      }
+    }
+
+
     adjusted <- as.data.frame(ComBat_seq(data$data,
       batch=batch_info$batches, group=batch_info$groups, shrink = SHRINK,
-      shrink.disp = SHRINK_DISP, gene.subset.n = GENE_N, covar_mod = COV_MOD,
+      shrink.disp = SHRINK_DISP, gene.subset.n = GENE_N, covar_mod = COV_MAT,
       full_mod = FULL_MOD))
     print('... done')
-    save_data(fileName = paste(args$file_name, ".tsv", sep = ""),
-      batch_corrected_matrix = adjusted,
-      samples = data$samples, genes = data$genes,use_gct = FALSE)
+
   }
 
+  if (OUTPUT_TYPE == "GCT"){
+
+    save_data(paste(args$file_name, '.gct', sep=''), 
+      batch_corrected_matrix=adjusted,
+      samples = data$samples, genes = data$genes, 
+      descriptions= data$descriptions, use_gct = TRUE,
+      raw_counts = data$raw_counts)
+
+  }else if (OUTPUT_TYPE == "TSV"){
+
+    save_data(fileName = paste(args$file_name, ".tsv", sep = ""),
+      batch_corrected_matrix = adjusted,
+      samples = data$samples, genes = data$genes, use_gct = FALSE,
+      raw_counts = data$raw_counts)
+
+  }else if (OUTPUT_TYPE == "both"){
+
+    save_data(paste(args$file_name, '.gct', sep=''), 
+      batch_corrected_matrix=adjusted,
+      samples = data$samples, genes = data$genes, 
+      descriptions= data$descriptions, use_gct = USE_GCT,
+      raw_counts = data$raw_counts)
+
+    save_data(fileName = paste(args$file_name, ".tsv", sep = ""),
+      batch_corrected_matrix = adjusted,
+      samples = data$samples, genes = data$genes,use_gct = FALSE,
+      raw_counts = data$raw_counts)
+  }
+
+  print('... done')
+  
 
 }
 
