@@ -94,17 +94,18 @@ read_delimited_file <- function(input_file){
 read_multiline_batch_info_file <- function(data_matrix, batch_file, use_cls){
   #' This function reads in the batch information, parses it, and
   #' returns batch, groups, and any other information
+  #' Rscript /opt/genepatt/src/ComBat-seq_wrapper.R --input_matrix /data/gpunit/inputs/BRCA_large_20783x40.gct --input_class /data/gpunit/inputs/BRCA_large_20783x40.cls
 
   print("Reading batch file...")
 
   if (use_cls){
-    df <- read.table(batch_file, skip = 2)
+    df <- read.table(batch_file, skip = 2, sep = ' ')
+    print("CLS read complete")
     print(df)
   }else{
     df <- read.table(batch_file, sep = '\t')
     print(df)
   }
-
 
   if (nrow(df) > 1){
     if ((ncol(df)) == ncol(data_matrix)){
@@ -124,7 +125,7 @@ read_multiline_batch_info_file <- function(data_matrix, batch_file, use_cls){
     groups <- NULL
   }
 
-  returnlist <- list("batches" = batches, "groups" = groups)
+  returnlist <- list(Batches = batches, Groups = groups)
   return(returnlist)
 
 }
@@ -219,8 +220,11 @@ save_data <- function(fileName, batch_corrected_matrix,
     ## create first two rows for GCT file
     row1 = paste("#1.2", paste(as.character(nrow(batch_corrected_matrix)), as.character(ncol(batch_corrected_matrix)), sep="\t"), sep="\n")
     write(row1, file=fileName)
-    batch_corrected_matrix$Description <- descriptions
-    batch_corrected_matrix$Name <- genes
+    #batch_corrected_matrix$Name <- genes
+    #batch_corrected_matrix$Description <- descriptions
+    ## write name and description columns 
+    batch_corrected_matrix = cbind(Description = descriptions, batch_corrected_matrix)
+    batch_corrected_matrix = cbind(Name = genes, batch_corrected_matrix)
     write.table(batch_corrected_matrix, quote=FALSE, row.names = FALSE, file=fileName, sep="\t", append=TRUE) # write data from a_df to the file
     close(f)
   }else if (!use_gct){

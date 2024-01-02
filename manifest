@@ -1,7 +1,7 @@
 #ComBat_Seq
-#Tue Dec 06 21:57:09 UTC 2022
+#Tue Jan 02 21:37:22 UTC 2024
 JVMLevel=
-LSID=urn\:lsid\:genepattern.org\:module.analysis\:00430\:4
+LSID=urn\:lsid\:genepattern.org\:module.analysis\:00430\:4.1
 author=Edwin Huang;Mesirov Lab
 commandLine=Rscript /opt/genepatt/src/ComBat-seq_wrapper.R --input_matrix <input.matrix>  --input_class <batch.information> --file_name <output.prefix> --shrink <shrink> --shrink_disp <shrink_disp> --output_type <output.type>  <gene.subset.n> <covariance.matrix> <covariates> 
 cpuType=any
@@ -9,7 +9,7 @@ description=ComBat_Seq module. A Batch effect adjustment tool for bulk RNA-seq c
 documentationUrl=https\://github.com/genepattern/ComBat_Seq/blob/develop/README.md
 fileFormat=
 job.cpuCount=1
-job.docker.image=genepattern/combat_seq\:v1.2
+job.docker.image=genepattern/combat_seq\:v1.3
 job.memory=2
 job.walltime=00\:30\:00
 language=any
@@ -138,4 +138,4 @@ src.repo=https\://github.com/genepattern/ComBat-Seq
 taskDoc=
 taskType=
 userid=edwin5588
-version=Added new parameter (users can now select output file format), new docker image to go with it
+version=New base docker image (R4.2.2), updates to gct file writing to ensure description and name are at the front. 

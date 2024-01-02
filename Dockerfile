@@ -1,5 +1,5 @@
 ## Parent image
-FROM rocker/r-ubuntu:20.04
+FROM r-base:4.2.2
 
 
 ## Make and set directories
@@ -20,7 +20,7 @@ RUN Rscript -e "BiocManager::install('edgeR')"
 
 ## install python
 RUN apt update
-RUN apt install python3
+RUN apt install -y python3
 
 ## copying data
 COPY data/* /opt/genepatt/testdata/

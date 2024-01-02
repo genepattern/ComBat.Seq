@@ -131,8 +131,10 @@ run_combat_seq <- function(args){
       }
     }
 
+    
+
     adjusted <- as.data.frame(ComBat_seq(data$data,
-      batch=batch_info$batches, group=batch_info$groups, shrink = SHRINK,
+      batch=batch_info$Batches, group=batch_info$Groups, shrink = SHRINK,
       shrink.disp = SHRINK_DISP, gene.subset.n = GENE_N, covar_mod = COV_MAT,
       full_mod = FULL_MOD))
 
@@ -189,7 +191,6 @@ run_combat_seq <- function(args){
       samples = data$samples, genes = data$genes,use_gct = FALSE,
       raw_counts = data$raw_counts)
   }
-
   print('... done')
   
 
