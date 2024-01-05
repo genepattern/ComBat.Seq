@@ -1,8 +1,9 @@
 #ComBat_Seq
-#Tue Jan 02 21:37:22 UTC 2024
+#Fri Jan 05 21:47:04 UTC 2024
 JVMLevel=
-LSID=urn\:lsid\:genepattern.org\:module.analysis\:00430\:4.1
+LSID=urn\:lsid\:genepattern.org\:module.analysis\:00430\:5.4
 author=Edwin Huang;Mesirov Lab
+categories=batch correction
 commandLine=Rscript /opt/genepatt/src/ComBat-seq_wrapper.R --input_matrix <input.matrix>  --input_class <batch.information> --file_name <output.prefix> --shrink <shrink> --shrink_disp <shrink_disp> --output_type <output.type>  <gene.subset.n> <covariance.matrix> <covariates> 
 cpuType=any
 description=ComBat_Seq module. A Batch effect adjustment tool for bulk RNA-seq count data. Improvement upon ComBat,  and uses a negative binomial regression to model batch effects. ComBat-seq takes untransformed, raw count matrix as input. Provides adjusted data which preserves the integer nature of counts, so that the adjusted data are compatible with the assumptions of state-of-the-art differential expression software (e.g. edgeR, DESeq2, which request untransformed count data)\nOriginal Documentation\: https\://github.com/zhangyuqing/ComBat-seq \nCredits go to Zhang et al, https\://doi.org/10.1093/nargab/lqaa078
@@ -133,9 +134,10 @@ p9_prefix_when_specified=--cov_mat
 p9_type=java.io.File
 p9_value=
 privacy=public
-quality=preproduction
+publicationDate=01/03/2024 10\:11 
+quality=production
 src.repo=https\://github.com/genepattern/ComBat-Seq
 taskDoc=
-taskType=
+taskType=batch correction
 userid=edwin5588
-version=New base docker image (R4.2.2), updates to gct file writing to ensure description and name are at the front. 
+version=Added batch correction tag
